@@ -29,7 +29,7 @@ const p5draw = (p) => {
         for(var i = 0; i < menuNum; i++) {
             menu.push(new displayFish(i));
             menu[i].defEmoji();
-          }
+        }
 	}
 
 	p.draw = () => {
@@ -43,6 +43,14 @@ const p5draw = (p) => {
         p.textSize(16);
         p.textAlign(p.CENTER);
         p.text(label, width / 2, height - 4);
+    }
+
+    p.keyPressed = () => {
+        if (p.keyCode === 32) {
+            for(var i = 0; i < menuNum; i++) {
+                menu[i].restart();
+            }
+        }
     }
 
     function displayFish(tmpIndex){
@@ -70,8 +78,14 @@ const p5draw = (p) => {
                 this.changeFlag = false;
               } else if (label === "sushi") {
                   this.emoji = emoji[4];
-              }
+              } 
         };
+
+        this.restart = function(){
+            this.theta += this.speed;
+            this.defEmoji();
+            this.changeFlag = false;
+        }
 
         this.defEmoji = function() {
             var emojiNum = p.random(1);
@@ -88,8 +102,6 @@ const p5draw = (p) => {
         }
     }
 
-    // Unlike the video classifier, this classifier will run continuously,
-    // calling gotResult again and again
     function audioClassifierReady() {
         classifier.classify(gotResult);
     }
@@ -99,10 +111,6 @@ const p5draw = (p) => {
             console.error(error);
             return;
         }
-
-        // results is an array, sorted by confidence. Each
-        // result will look like { label: "category label" confidence: 0.453 }
-        // or something like this
         label = results[0].label;
     }
 }
